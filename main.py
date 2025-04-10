@@ -6,15 +6,18 @@ from mps.ui.main_window import MainWindow
 from mps.config.design_config import DESIGN_CONFIG
 
 def load_stylesheet(app):
+    """
+    Carga la hoja de estilo global desde el archivo style.qss.
+    """
     try:
-        file = QFile("mps/assets/styles/style.qss")
+        file = QFile("mps/ui/style.qss")
         if file.open(QFile.OpenModeFlag.ReadOnly | QFile.OpenModeFlag.Text):
             stream = QTextStream(file)
             stylesheet = stream.readAll()
-            # Reemplazar los colores en el archivo de estilos
-            for key, value in DESIGN_CONFIG.items():
-                stylesheet = stylesheet.replace(f"{{{{ {key} }}}}", value)
             app.setStyleSheet(stylesheet)
+            print("Hoja de estilo cargada correctamente.")
+        else:
+            print("Advertencia: No se pudo abrir el archivo style.qss.")
     except Exception as e:
         print(f"Error al cargar el archivo de estilos: {e}")
 

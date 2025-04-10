@@ -1,34 +1,31 @@
-QMainWindow {
-    background-color: {{ background }};
-    color: {{ text }};
-    font-family: 'Roboto', sans-serif;
+/* Estilo global para QWidget */
+QWidget {
+    background-color: white;
+    color: #333;
 }
 
-QLabel {
-    font-size: 14px;
-    color: {{ text }};
-}
-
+/* Estilo para QPushButton */
 QPushButton {
-    background-color: {{ primary }};
-    color: {{ background }};
-    border: 1px solid {{ text }};
-    border-radius: 5px;
-    padding: 5px 10px;
+    background-color: #A7C7E7;
+    color: black;
+    border-radius: 8px;
+    padding: 8px;
+    border: none;
 }
-
 QPushButton:hover {
-    background-color: {{ secondary }};
+    background-color: #8FB9E1;
 }
 
-QTableWidget {
-    background-color: {{ background }};
-    border: 1px solid {{ text }};
-    gridline-color: {{ text }};
-}
-
+/* Estilo para QLineEdit */
 QLineEdit {
-    border: 1px solid {{ text }};
-    border-radius: 5px;
-    padding: 5px;
+    border: 1px solid #ccc;
+    padding: 6px;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #000;
+}
+
+/* Estilo para QLabel */
+QLabel {
+    color: #222;
 }

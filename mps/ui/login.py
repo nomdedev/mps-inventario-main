@@ -1,57 +1,84 @@
 # Archivo para la interfaz gráfica de inicio de sesión.
 # Contendrá la clase LoginWindow para manejar el login de usuarios.
 
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton, QWidget, QMessageBox
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import pyqtSignal, Qt, QCoreApplication
 from mps.controllers.auth_controller import AuthController
 
-class LoginWindow(QWidget):
-    login_successful = pyqtSignal(dict)  # Señal emitida cuando el login es exitoso
+class LoginWindow(QMainWindow):
+    login_successful = pyqtSignal(object)  # Señal emitida cuando el login es exitoso
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Inicio de Sesión")
-        self.setGeometry(100, 100, 300, 200)
+        self.setWindowTitle("Login")
+        self.setFixedSize(360, 640)  # Tamaño fijo
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)  # Eliminar bordes innecesarios
+
+        # Centrar la ventana
+        screen_geometry = QCoreApplication.instance().primaryScreen().geometry()
+        x = (screen_geometry.width() - self.width()) // 2
+        y = (screen_geometry.height() - self.height()) // 2
+        self.move(x, y)
 
         self.auth_controller = AuthController()
 
-        layout = QVBoxLayout()
+        # Configurar diseño
+        central_widget = QWidget()
+        layout = QVBoxLayout(central_widget)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Etiqueta de instrucciones
-        self.label = QLabel("Ingrese sus credenciales")
-        layout.addWidget(self.label)
+        # Logo
+        logo_label = QLabel()
+        pixmap = QPixmap("mps/resources/logo.png")
+        logo_label.setPixmap(pixmap)
+        logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(logo_label)
 
-        # Campo de usuario
-        self.username_input = QLineEdit()
-        self.username_input.setPlaceholderText("Usuario")
-        layout.addWidget(self.username_input)
+        # Nombre de la app
+        app_name_label = QLabel("MPS Inventario")
+        app_name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        app_name_label.setStyleSheet("font-size: 20px; color: #555;")
+        layout.addWidget(app_name_label)
 
-        # Campo de contraseña
+        # Campos de usuario y contraseña
+        self.user_input = QLineEdit()
+        self.user_input.setPlaceholderText("Usuario")
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Contraseña")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        layout.addWidget(self.password_input)
 
         # Botón de inicio de sesión
-        self.login_button = QPushButton("Ingresar")
+        self.login_button = QPushButton("Iniciar sesión")
+        self.login_button.setFixedWidth(200)
         self.login_button.clicked.connect(self.iniciar_sesion)
+
+        # Agregar widgets al layout
+        layout.addWidget(self.user_input)
+        layout.addWidget(self.password_input)
         layout.addWidget(self.login_button)
 
-        self.setLayout(layout)
+        self.setCentralWidget(central_widget)
 
     def iniciar_sesion(self):
-        username = self.username_input.text().strip()
+        username = self.user_input.text().strip()
         password = self.password_input.text().strip()
 
         if username and password:
-            try:
-                usuario = self.auth_controller.verificar_credenciales(username, password)
-                if usuario:
-                    QMessageBox.information(self, "Éxito", "Inicio de sesión exitoso.")
-                    self.login_successful.emit({"id": usuario[0], "username": usuario[1], "role": usuario[2]})
-                else:
-                    QMessageBox.warning(self, "Error", "Credenciales incorrectas.")
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Error al verificar las credenciales: {e}")
+            self.intentar_login(username, password)
         else:
             QMessageBox.warning(self, "Advertencia", "Por favor, complete todos los campos.")
+
+    def intentar_login(self, usuario, contraseña):
+        """
+        Intenta autenticar al usuario con las credenciales proporcionadas.
+        """
+        try:
+            usuario_actual = self.auth_controller.verificar_credenciales(usuario, contraseña)
+            if usuario_actual:
+                QMessageBox.information(self, "Éxito", "Inicio de sesión exitoso.")
+                self.login_successful.emit({"id": usuario_actual[0], "username": usuario_actual[1], "role": usuario_actual[2]})
+            else:
+                QMessageBox.warning(self, "Error de Login", "Usuario o contraseña incorrectos.")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error al verificar las credenciales: {e}")

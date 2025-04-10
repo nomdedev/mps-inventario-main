@@ -34,3 +34,25 @@ class AuthController:
             raise RuntimeError(f"Error al intentar iniciar sesión: {e}")
         finally:
             db.cerrar()
+
+    def verificar_credenciales(self, usuario, contraseña):
+        """
+        Verifica las credenciales del usuario contra la base de datos.
+        :param usuario: Nombre de usuario.
+        :param contraseña: Contraseña del usuario.
+        :return: Objeto Usuario si las credenciales son válidas, None si no lo son.
+        """
+        db = DBConnection()
+        try:
+            db.conectar(base="users")
+            query = """
+                SELECT id, nombre, apellido, usuario, contraseña, rol, activo
+                FROM Usuarios
+                WHERE usuario = ? AND contraseña = ? AND activo = 1
+            """
+            resultado = db.ejecutar_query(query, [usuario, contraseña])
+            if resultado:
+                return Usuario.desde_row(resultado[0])
+            return None
+        finally:
+            db.cerrar()
