@@ -1,0 +1,6 @@
+pyodbc
+qrcode[pil]
+pyzbar
+Pillow
+Flask
+PyQt6

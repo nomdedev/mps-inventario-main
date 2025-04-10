@@ -1,0 +1,34 @@
+QMainWindow {
+    background-color: {{ background }};
+    color: {{ text }};
+    font-family: 'Roboto', sans-serif;
+}
+
+QLabel {
+    font-size: 14px;
+    color: {{ text }};
+}
+
+QPushButton {
+    background-color: {{ primary }};
+    color: {{ background }};
+    border: 1px solid {{ text }};
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+QPushButton:hover {
+    background-color: {{ secondary }};
+}
+
+QTableWidget {
+    background-color: {{ background }};
+    border: 1px solid {{ text }};
+    gridline-color: {{ text }};
+}
+
+QLineEdit {
+    border: 1px solid {{ text }};
+    border-radius: 5px;
+    padding: 5px;
+}

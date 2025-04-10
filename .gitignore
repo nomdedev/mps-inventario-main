@@ -1,0 +1,28 @@
+# Ignorar el archivo de credenciales
+mps/config/credentials.py
+
+# Ignorar archivos de configuración sensibles
+mps/config/db_config.py
+
+# Ignorar archivos de logs
+*.log
+
+# Ignorar archivos de bases de datos locales
+*.db
+
+# Ignorar archivos de configuración específicos del entorno
+.env
+*.env
+
+# Ignorar archivos de caché de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorar configuraciones específicas del IDE
+.vscode/
+.idea/
+
+# Ignorar otros archivos sensibles o temporales
+*.bak
+*.tmp

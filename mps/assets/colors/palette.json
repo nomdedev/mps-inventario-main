@@ -1,0 +1,10 @@
+{
+  "primary": "#a8dadc",
+  "secondary": "#f4a261",
+  "background": "#f1faee",
+  "text": "#457b9d",
+  "error": "#e63946",
+  "warning": "#ffb703",
+  "success": "#2a9d8f",
+  "border-radius": "10px"
+}
