@@ -1,14 +1,16 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QMessageBox
 from mps.controllers.usuarios_controller import UsuariosController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class UsuariosView(QWidget):
+class UsuariosView(VentanaConEstilo):
     def __init__(self, usuario_actual):
         super().__init__()
-        self.setWindowTitle("Gestión de Usuarios")
-        self.setGeometry(100, 100, 600, 400)
+        self.setFixedSize(800, 600)
         self.usuario_actual = usuario_actual  # Usuario actual
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
         self.label = QLabel("Usuarios del Sistema")
         layout.addWidget(self.label)
 
@@ -36,7 +38,6 @@ class UsuariosView(QWidget):
             self.delete_button.clicked.connect(self.eliminar_usuario)
             layout.addWidget(self.delete_button)
 
-        self.setLayout(layout)
         self.controller = UsuariosController()
         self.cargar_datos()
 

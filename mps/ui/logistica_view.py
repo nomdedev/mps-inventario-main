@@ -1,13 +1,15 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QDateEdit, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QDateEdit, QMessageBox
 from mps.controllers.logistica_controller import LogisticaController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class LogisticaView(QWidget):
+class LogisticaView(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestión de Logística")
-        self.setGeometry(100, 100, 800, 600)
+        self.setFixedSize(800, 600)
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
         self.label = QLabel("Logística de Obras")
         layout.addWidget(self.label)
 
@@ -30,7 +32,6 @@ class LogisticaView(QWidget):
         self.add_button.clicked.connect(self.agregar_logistica)
         layout.addWidget(self.add_button)
 
-        self.setLayout(layout)
         self.controller = LogisticaController()
         self.cargar_datos()
 

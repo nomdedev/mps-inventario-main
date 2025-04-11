@@ -2,20 +2,35 @@
 # Contendrá la clase MainWindow con un menú lateral y un QStackedWidget para cambiar entre módulos.
 
 import sys
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QWidget, QHBoxLayout, QMessageBox, QFrame
+from PyQt6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QMessageBox, QFrame
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt, QCoreApplication, QFile, QTextStream
 from mps.services.backup_manager import backup_todas
 from mps.ui.restore_dialog import RestoreDialog
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class MainWindow(QMainWindow):
+class MainWindow(VentanaConEstilo):
     def __init__(self, usuario_actual):
         super().__init__()
-        self.setWindowTitle("MPS Inventario")
-        self.resize(1024, 768)  # Tamaño inicial
+        self.resize(1024, 768)
 
-        # Cargar estilo global desde style.qss
-        self.cargar_estilo_global()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        # Header con botones personalizados
+        header = QHBoxLayout()
+        minimize_button = QPushButton("–")
+        minimize_button.clicked.connect(self.showMinimized)
+        maximize_button = QPushButton("□")
+        maximize_button.clicked.connect(self.showMaximized)
+        close_button = QPushButton("X")
+        close_button.setStyleSheet("color: red; font-weight: bold;")
+        close_button.clicked.connect(self.close)
+        header.addWidget(minimize_button)
+        header.addWidget(maximize_button)
+        header.addWidget(close_button)
+        layout.addLayout(header)
 
         # Centrar la ventana
         screen_geometry = QCoreApplication.instance().primaryScreen().geometry()
@@ -24,8 +39,7 @@ class MainWindow(QMainWindow):
         self.move(x, y)
 
         # Configurar diseño
-        central_widget = QWidget()
-        layout = QHBoxLayout(central_widget)
+        central_layout = QHBoxLayout(self.main_widget)
 
         # Menú lateral (sidebar)
         self.sidebar = QFrame()
@@ -63,10 +77,10 @@ class MainWindow(QMainWindow):
             sidebar_layout.addWidget(self.restore_button)
 
         # Agregar sidebar al layout principal
-        layout.addWidget(self.sidebar)
-        layout.addStretch()  # Espacio para el contenido principal
+        central_layout.addWidget(self.sidebar)
+        central_layout.addStretch()  # Espacio para el contenido principal
 
-        self.setCentralWidget(central_widget)
+        self.setCentralWidget(self.main_widget)
 
     def cargar_estilo_global(self):
         """
@@ -119,3 +133,13 @@ class MainWindow(QMainWindow):
         except Exception as e:
             print(f"Error al realizar el backup automático: {e}")
         event.accept()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.MouseButton.LeftButton:
+            self.move(event.globalPosition().toPoint() - self.drag_position)
+            event.accept()

@@ -26,3 +26,9 @@ __pycache__/
 # Ignorar otros archivos sensibles o temporales
 *.bak
 *.tmp
+
+# Configuración de conexión SQL y contraseñas
+config/databaseConfig.json
+*.env
+*.key
+*.json

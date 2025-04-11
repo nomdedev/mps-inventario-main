@@ -1,18 +1,20 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QTabWidget, QLabel, QLineEdit, QCheckBox, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QTabWidget, QLabel, QLineEdit, QCheckBox, QMessageBox
 from mps.controllers.estado_obra_controller import EstadoObraController
 from mps.controllers.pedidos_controller import PedidosController
 from mps.services.auditoria import registrar_auditoria
 from mps.utils.exporter import exportar_materiales_obra, exportar_checklist_final
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class LogisticaWidget(QWidget):
+class LogisticaWidget(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestión de Logística")
+        self.setFixedSize(800, 600)
         self.estado_controller = EstadoObraController()
         self.pedidos_controller = PedidosController()
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Tabla de obras activas
         self.table = QTableWidget()
@@ -33,7 +35,6 @@ class LogisticaWidget(QWidget):
         self.export_button.clicked.connect(self.exportar_materiales)
         layout.addWidget(self.export_button)
 
-        self.setLayout(layout)
         self.cargar_obras()
 
     def cargar_obras(self):

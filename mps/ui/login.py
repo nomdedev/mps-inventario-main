@@ -50,7 +50,7 @@ class LoginWindow(QMainWindow):
 
         # Botón de inicio de sesión
         self.login_button = QPushButton("Iniciar sesión")
-        self.login_button.setFixedWidth(200)  # Eliminar setStyleSheet individual
+        self.login_button.setFixedWidth(200)
         self.login_button.clicked.connect(self.iniciar_sesion)
 
         # Agregar widgets al layout
@@ -61,6 +61,9 @@ class LoginWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def iniciar_sesion(self):
+        """
+        Maneja el evento de clic en el botón de inicio de sesión.
+        """
         username = self.user_input.text().strip()
         password = self.password_input.text().strip()
 

@@ -1,14 +1,15 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, QInputDialog
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, QInputDialog
 from mps.controllers.aprobaciones_controller import AprobacionesController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class AprobacionesView(QWidget):
+class AprobacionesView(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestión de Aprobaciones")
-        self.controller = AprobacionesController()
+        self.setFixedSize(800, 600)
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Tabla de aprobaciones pendientes
         self.table = QTableWidget()
@@ -28,7 +29,6 @@ class AprobacionesView(QWidget):
         button_layout.addWidget(self.reject_button)
 
         layout.addLayout(button_layout)
-        self.setLayout(layout)
 
         # Cargar aprobaciones al iniciar
         self.cargar_aprobaciones()

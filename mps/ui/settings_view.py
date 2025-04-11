@@ -1,14 +1,16 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QColorDialog, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QPushButton, QColorDialog, QMessageBox
 from mps.config.design_config import DESIGN_CONFIG
 from mps.config.theme_manager import generate_theme
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class SettingsView(QWidget):
+class SettingsView(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Configuración")
-        self.setGeometry(100, 100, 600, 400)
+        self.setFixedSize(600, 400)
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         self.label = QLabel("Configuración de la Aplicación")
         layout.addWidget(self.label)
@@ -16,8 +18,6 @@ class SettingsView(QWidget):
         self.change_theme_button = QPushButton("Cambiar Color Base del Tema")
         self.change_theme_button.clicked.connect(self.cambiar_tema)
         layout.addWidget(self.change_theme_button)
-
-        self.setLayout(layout)
 
     def cambiar_tema(self):
         color = QColorDialog.getColor()

@@ -1,9 +1,16 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMessageBox
+import json
+import os
+import pyodbc
+from PyQt6.QtWidgets import QApplication, QMessageBox, QDialog
 from PyQt6.QtCore import QFile, QTextStream
-from mps.ui.login import LoginWindow
+from mps.ui.login_window import LoginWindow
 from mps.ui.main_window import MainWindow
 from mps.config.design_config import DESIGN_CONFIG
+from mps.ui.configurar_conexion_dialog import ConfigurarConexionDialog
+from mps.controllers.database_setup import DatabaseSetup
+
+CONFIG_PATH = './config/databaseConfig.json'
 
 def load_stylesheet(app):
     """
@@ -21,11 +28,29 @@ def load_stylesheet(app):
     except Exception as e:
         print(f"Error al cargar el archivo de estilos: {e}")
 
+def load_config():
+    """
+    Carga la configuración de conexión SQL desde el archivo JSON.
+    """
+    try:
+        with open(CONFIG_PATH, 'r') as config_file:
+            return json.load(config_file)
+    except FileNotFoundError:
+        print("Archivo de configuración no encontrado. Usando valores predeterminados.")
+        return {"server": "", "port": 1433, "user": "", "password": ""}
+
 def main():
     try:
         print("Iniciando la aplicación...")  # Confirmación de inicio
         app = QApplication(sys.argv)
         load_stylesheet(app)
+
+        # Cargar configuración de conexión
+        config = load_config()
+
+        # Configurar la base de datos
+        db_setup = DatabaseSetup(config)
+        db_setup.setup()
 
         # Crear instancia de LoginWindow
         login_window = LoginWindow()
@@ -37,6 +62,10 @@ def main():
             Oculta la ventana de login y muestra la ventana principal.
             """
             nonlocal main_window
+            if usuario_actual is None:
+                print("Error: Usuario actual es nulo.")
+                QMessageBox.critical(None, "Error Crítico", "Usuario actual es nulo.")
+                return
             print(f"Usuario autenticado: {usuario_actual}")
             login_window.hide()
             main_window = MainWindow(usuario_actual)

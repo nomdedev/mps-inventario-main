@@ -1,17 +1,18 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox
 from mps.controllers.inventario_controller import InventarioController
 from mps.models.material import Material
 from mps.services.auditoria import registrar_auditoria
 from mps.services.session import Session
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class InventarioWidget(QWidget):
+class InventarioWidget(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestión de Inventario")
-        self.controller = InventarioController()
+        self.setFixedSize(800, 600)
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Tabla de materiales
         self.table = QTableWidget()
@@ -47,7 +48,6 @@ class InventarioWidget(QWidget):
         button_layout.addWidget(self.apartar_button)
 
         layout.addLayout(button_layout)
-        self.setLayout(layout)
 
         # Cargar datos iniciales
         self.cargar_datos()

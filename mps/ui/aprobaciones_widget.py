@@ -1,12 +1,14 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, QLineEdit
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, QLineEdit
 from mps.controllers.aprobaciones_controller import AprobacionesController
 from mps.services.session import Session
 from mps.services.permissions import tiene_permiso
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class AprobacionesWidget(QWidget):
+class AprobacionesWidget(VentanaConEstilo):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Gestión de Aprobaciones")
+        self.setFixedSize(800, 600)
         self.controller = AprobacionesController()
 
         # Verificar permisos
@@ -17,7 +19,8 @@ class AprobacionesWidget(QWidget):
             return
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Tabla de solicitudes pendientes
         self.table = QTableWidget()
@@ -37,7 +40,6 @@ class AprobacionesWidget(QWidget):
         button_layout.addWidget(self.reject_button)
 
         layout.addLayout(button_layout)
-        self.setLayout(layout)
 
         # Cargar solicitudes al iniciar
         self.cargar_solicitudes()

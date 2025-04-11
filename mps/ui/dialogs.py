@@ -1,15 +1,24 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+from PyQt6.QtCore import Qt
 from mps.controllers.inventario_controller import InventarioController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class AgregarMaterialDialog(QDialog):
+class AgregarMaterialDialog(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Agregar Material")
-        self.setGeometry(100, 100, 400, 200)
-        self.controller = InventarioController()
+        self.setFixedSize(400, 200)
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        # Header con botón de cerrar
+        header = QHBoxLayout()
+        close_button = QPushButton("X")
+        close_button.setStyleSheet("color: red; font-weight: bold;")
+        close_button.clicked.connect(self.reject)
+        header.addWidget(close_button, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addLayout(header)
 
         # Campo para código
         self.codigo_input = QLineEdit()
@@ -66,14 +75,33 @@ class AgregarMaterialDialog(QDialog):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error al agregar el material: {e}")
 
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            event.accept()
 
-class EditarMaterialDialog(QDialog):
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.MouseButton.LeftButton:
+            self.move(event.globalPosition().toPoint() - self.drag_position)
+            event.accept()
+
+
+class EditarMaterialDialog(VentanaConEstilo):
     def __init__(self, material):
         super().__init__()
-        self.setWindowTitle("Editar Material")
-        self.setGeometry(100, 100, 400, 300)
+        self.setFixedSize(400, 300)
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        # Header con botón de cerrar
+        header = QHBoxLayout()
+        close_button = QPushButton("X")
+        close_button.setStyleSheet("color: red; font-weight: bold;")
+        close_button.clicked.connect(self.reject)
+        header.addWidget(close_button, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addLayout(header)
 
         self.codigo_input = QLineEdit(material.codigo)
         layout.addWidget(QLabel("Código:"))
@@ -117,14 +145,33 @@ class EditarMaterialDialog(QDialog):
             "stock_total": int(self.stock_total_input.text())
         }
 
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            event.accept()
 
-class MovimientoMaterialDialog(QDialog):
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.MouseButton.LeftButton:
+            self.move(event.globalPosition().toPoint() - self.drag_position)
+            event.accept()
+
+
+class MovimientoMaterialDialog(VentanaConEstilo):
     def __init__(self, tipo_movimiento):
         super().__init__()
-        self.setWindowTitle(f"Registrar {tipo_movimiento}")
-        self.setGeometry(100, 100, 400, 200)
+        self.setFixedSize(400, 200)
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        # Header con botón de cerrar
+        header = QHBoxLayout()
+        close_button = QPushButton("X")
+        close_button.setStyleSheet("color: red; font-weight: bold;")
+        close_button.clicked.connect(self.reject)
+        header.addWidget(close_button, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addLayout(header)
 
         self.cantidad_input = QLineEdit()
         self.cantidad_input.setPlaceholderText("Cantidad")
@@ -163,3 +210,13 @@ class MovimientoMaterialDialog(QDialog):
         if hasattr(self, "obra_input"):
             datos["obra"] = self.obra_input.text()
         return datos
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.MouseButton.LeftButton:
+            self.move(event.globalPosition().toPoint() - self.drag_position)
+            event.accept()

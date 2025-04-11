@@ -1,13 +1,15 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox
 from mps.controllers.ordenes_controller import OrdenesController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class OrdenesView(QWidget):
+class OrdenesView(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestión de Órdenes de Compra")
-        self.setGeometry(100, 100, 800, 600)
+        self.setFixedSize(800, 600)
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
         self.label = QLabel("Órdenes de Compra")
         layout.addWidget(self.label)
 
@@ -18,7 +20,6 @@ class OrdenesView(QWidget):
         self.add_button.clicked.connect(self.agregar_orden)
         layout.addWidget(self.add_button)
 
-        self.setLayout(layout)
         self.controller = OrdenesController()
         self.cargar_datos()
 

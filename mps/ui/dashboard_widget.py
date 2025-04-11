@@ -1,19 +1,21 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem
 from mps.controllers.dashboard_controller import DashboardController
 from mps.services.session import Session
 from mps.utils.exporter import exportar_dashboard
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class DashboardWidget(QWidget):
+class DashboardWidget(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Dashboard")
+        self.setFixedSize(800, 600)
         self.controller = DashboardController()
         self.usuario_actual = Session.get_usuario_actual()
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Panel superior con KPIs
         self.kpi_layout = QHBoxLayout()
@@ -48,7 +50,6 @@ class DashboardWidget(QWidget):
         self.export_button.clicked.connect(self.exportar_dashboard)
         layout.addWidget(self.export_button)
 
-        self.setLayout(layout)
         self.cargar_datos()
 
     def cargar_datos(self):

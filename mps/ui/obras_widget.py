@@ -1,12 +1,14 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox
 from mps.controllers.obras_controller import ObrasController
 from mps.services.session import Session
 from mps.services.permissions import tiene_permiso
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class ObrasWidget(QWidget):
+class ObrasWidget(VentanaConEstilo):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Gestión de Obras")
+        self.setFixedSize(800, 600)
         self.controller = ObrasController()
 
         # Verificar permisos
@@ -17,7 +19,8 @@ class ObrasWidget(QWidget):
             return
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Tabla de obras
         self.table = QTableWidget()

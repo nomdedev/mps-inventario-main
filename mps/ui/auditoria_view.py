@@ -1,14 +1,17 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QMessageBox, QPushButton, QLineEdit, QHBoxLayout
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QMessageBox, QPushButton, QLineEdit, QHBoxLayout
 from mps.controllers.auditoria_controller import AuditoriaController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class AuditoriaView(QWidget):
+class AuditoriaView(VentanaConEstilo):
     def __init__(self, usuario_actual):
         super().__init__()
-        self.setWindowTitle("Auditoría del Sistema")
-        self.setGeometry(100, 100, 800, 600)
+        self.setFixedSize(800, 600)
         self.usuario_actual = usuario_actual
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
+
         self.label = QLabel("Historial de Auditoría")
         layout.addWidget(self.label)
 
@@ -31,7 +34,6 @@ class AuditoriaView(QWidget):
 
             layout.addLayout(action_layout)
 
-        self.setLayout(layout)
         self.controller = AuditoriaController()
         self.cargar_datos()
 

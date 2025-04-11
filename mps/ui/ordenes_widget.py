@@ -1,16 +1,17 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, QDialog
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, QDialog
 from mps.controllers.ordenes_controller import OrdenesController
 from mps.services.session import Session
 from mps.services.permissions import tiene_permiso
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class OrdenesWidget(QWidget):
+class OrdenesWidget(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestión de Órdenes")
-        self.controller = OrdenesController()
+        self.setFixedSize(800, 600)
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Tabla de órdenes
         self.table = QTableWidget()
@@ -34,7 +35,6 @@ class OrdenesWidget(QWidget):
         button_layout.addWidget(self.change_status_button)
 
         layout.addLayout(button_layout)
-        self.setLayout(layout)
 
         # Cargar órdenes al iniciar
         self.cargar_ordenes()

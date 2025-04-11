@@ -1,5 +1,7 @@
 import pyodbc
-from mps.utils.logger import Logger
+from mps.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 class DBConnection:
     def __init__(self):
@@ -11,7 +13,7 @@ class DBConnection:
         self.password = "mps.1887"
         self.driver = "ODBC Driver 17 for SQL Server"
         self.connection = None
-        self.logger = Logger.get_logger("DBConnection")
+        logger.info("Inicializando conexión a la base de datos.")
 
     def conectar(self, base: str = "inventario"):
         """
@@ -27,9 +29,9 @@ class DBConnection:
                 f"PWD={self.password};"
             )
             self.connection = pyodbc.connect(self.connection_string)
-            self.logger.info(f"Conexión a la base de datos '{base}' establecida.")
+            logger.info(f"Conexión a la base de datos '{base}' establecida.")
         except pyodbc.Error as e:
-            self.logger.error(f"Error al conectar a la base de datos '{base}': {e}")
+            logger.error(f"Error al conectar a la base de datos '{base}': {e}")
             raise RuntimeError(f"Error al conectar a la base de datos '{base}': {e}")
 
     def ejecutar_query(self, query: str, params: list = []):
@@ -47,7 +49,7 @@ class DBConnection:
             result = cursor.fetchall()
             return result
         except pyodbc.Error as e:
-            self.logger.error(f"Error al ejecutar la consulta: {e}")
+            logger.error(f"Error al ejecutar la consulta: {e}")
             raise RuntimeError(f"Error al ejecutar la consulta: {e}")
 
     def ejecutar_insert(self, query: str, params: list = []):
@@ -62,9 +64,9 @@ class DBConnection:
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             self.connection.commit()
-            self.logger.info("Consulta ejecutada y cambios guardados.")
+            logger.info("Consulta ejecutada y cambios guardados.")
         except pyodbc.Error as e:
-            self.logger.error(f"Error al ejecutar la consulta: {e}")
+            logger.error(f"Error al ejecutar la consulta: {e}")
             raise RuntimeError(f"Error al ejecutar la consulta: {e}")
 
     def cerrar(self):
@@ -74,7 +76,7 @@ class DBConnection:
         try:
             if self.connection:
                 self.connection.close()
-                self.logger.info("Conexión a la base de datos cerrada.")
+                logger.info("Conexión a la base de datos cerrada.")
         except pyodbc.Error as e:
-            self.logger.error(f"Error al cerrar la conexión: {e}")
+            logger.error(f"Error al cerrar la conexión: {e}")
             raise RuntimeError(f"Error al cerrar la conexión: {e}")

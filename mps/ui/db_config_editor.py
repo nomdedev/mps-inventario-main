@@ -1,15 +1,17 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
 import json
 import os
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class DBConfigEditor(QWidget):
+class DBConfigEditor(VentanaConEstilo):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Configuración de Base de Datos")
         self.setFixedSize(400, 300)
 
         # Layout principal
-        layout = QVBoxLayout(self)
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Campos de configuración
         self.server_input = QLineEdit()

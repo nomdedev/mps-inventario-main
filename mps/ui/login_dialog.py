@@ -1,25 +1,22 @@
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QSpacerItem, QSizePolicy
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QSpacerItem, QSizePolicy
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from mps.controllers.usuarios_controller import UsuariosController
 from mps.controllers.auditoria_controller import AuditoriaController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class LoginDialog(QDialog):
+class LoginDialog(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Inicio de Sesión")
-        self.setFixedSize(360, 640)  # Tamaño similar al de un celular
-
-        # Centrar la ventana en la pantalla
-        screen_geometry = self.screen().geometry()
-        x = (screen_geometry.width() - self.width()) // 2
-        y = (screen_geometry.height() - self.height()) // 2
-        self.move(x, y)
+        self.setFixedSize(360, 640)
 
         self.controller = UsuariosController()
         self.auditoria_controller = AuditoriaController()  # Controlador de auditoría
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Espacio para el logo
         self.logo_label = QLabel()
@@ -69,7 +66,6 @@ class LoginDialog(QDialog):
         # Espaciador
         layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
 
-        self.setLayout(layout)
         self.usuario_actual = None
 
     def iniciar_sesion(self):

@@ -1,12 +1,14 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox
 from mps.controllers.usuarios_controller import UsuariosController
 from mps.services.session import Session
 from mps.services.permissions import tiene_permiso
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class UsuariosWidget(QWidget):
+class UsuariosWidget(VentanaConEstilo):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Gestión de Usuarios")
+        self.setFixedSize(800, 600)
         self.controller = UsuariosController()
 
         # Verificar permisos
@@ -17,7 +19,8 @@ class UsuariosWidget(QWidget):
             return
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Tabla de usuarios
         self.table = QTableWidget()
@@ -45,7 +48,6 @@ class UsuariosWidget(QWidget):
         button_layout.addWidget(self.toggle_active_button)
 
         layout.addLayout(button_layout)
-        self.setLayout(layout)
 
         # Cargar usuarios al iniciar
         self.cargar_usuarios()

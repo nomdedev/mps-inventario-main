@@ -1,14 +1,17 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, QInputDialog
 from mps.controllers.movimientos_controller import MovimientosController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class MovimientosWidget(QWidget):
+class MovimientosWidget(VentanaConEstilo):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Gestión de Movimientos")
+        self.setFixedSize(800, 600)
         self.controller = MovimientosController()
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Tabla de movimientos
         self.table = QTableWidget()
@@ -22,8 +25,6 @@ class MovimientosWidget(QWidget):
         self.filter_button.clicked.connect(self.filtrar_por_material)
         button_layout.addWidget(self.filter_button)
         layout.addLayout(button_layout)
-
-        self.setLayout(layout)
 
     def cargar_movimientos(self, material_id=None):
         """

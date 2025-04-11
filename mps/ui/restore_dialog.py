@@ -1,15 +1,16 @@
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox
 from mps.services.backup_manager import backup_todas
 from mps.services.restore_manager import restaurar_base
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class RestoreDialog(QDialog):
+class RestoreDialog(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Restaurar Base de Datos")
         self.setFixedSize(400, 200)
 
         # Layout principal
-        layout = QVBoxLayout(self)
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Selección de base de datos
         layout.addWidget(QLabel("Seleccione la base de datos a restaurar:"))

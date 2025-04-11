@@ -1,17 +1,18 @@
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QHBoxLayout, QMessageBox
+    QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QHBoxLayout, QMessageBox
 )
 from mps.controllers.inventario_controller import InventarioController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class InventarioView(QWidget):
+class InventarioView(VentanaConEstilo):
     def __init__(self, usuario_actual):
         super().__init__()
-        self.setWindowTitle("Inventario")
-        self.setGeometry(100, 100, 800, 600)
+        self.setFixedSize(800, 600)
         self.usuario_actual = usuario_actual  # Usuario actual
 
         # Layout principal
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Título
         self.label = QLabel("Inventario Actual")
@@ -56,7 +57,6 @@ class InventarioView(QWidget):
         self.total_label = QLabel("Total de ítems: 0")
         layout.addWidget(self.total_label)
 
-        self.setLayout(layout)
         self.controller = InventarioController()
         self.cargar_datos()
 

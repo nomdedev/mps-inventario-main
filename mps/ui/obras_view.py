@@ -1,13 +1,15 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit
 from mps.controllers.obras_controller import ObrasController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class ObrasView(QWidget):
+class ObrasView(VentanaConEstilo):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Gestión de Obras")
-        self.setGeometry(100, 100, 600, 400)
+        self.setFixedSize(800, 600)
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
         self.label = QLabel("Obras del Sistema")
         layout.addWidget(self.label)
 
@@ -26,7 +28,6 @@ class ObrasView(QWidget):
         self.add_button.clicked.connect(self.agregar_obra)
         layout.addWidget(self.add_button)
 
-        self.setLayout(layout)
         self.controller = ObrasController()
         self.cargar_datos()
 

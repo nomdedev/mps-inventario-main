@@ -1,14 +1,17 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QComboBox, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit, QComboBox, QMessageBox
 from mps.controllers.vidrios_controller import VidriosController
+from mps.ui.ventana_con_estilo import VentanaConEstilo
 
-class VidriosView(QWidget):
+class VidriosView(VentanaConEstilo):
     def __init__(self, usuario_actual):
         super().__init__()
-        self.setWindowTitle("Gestión de Vidrios")
-        self.setGeometry(100, 100, 800, 600)
+        self.setFixedSize(800, 600)
         self.usuario_actual = usuario_actual
 
-        layout = QVBoxLayout()
+        # Layout principal
+        layout = QVBoxLayout(self.main_widget)
+        layout.setContentsMargins(20, 20, 20, 20)
+
         self.label = QLabel("Gestión de Vidrios por Obra")
         layout.addWidget(self.label)
 
@@ -24,7 +27,6 @@ class VidriosView(QWidget):
             self.update_button.clicked.connect(self.actualizar_estado)
             layout.addWidget(self.update_button)
 
-        self.setLayout(layout)
         self.controller = VidriosController()
         self.cargar_datos()
 
