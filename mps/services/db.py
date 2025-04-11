@@ -1,4 +1,5 @@
 import pyodbc
+from mps.ui.configurar_conexion_dialog import ConfigurarConexionDialog
 from mps.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -8,7 +9,8 @@ class DBConnection:
         """
         Inicializa la conexión a la base de datos remota.
         """
-        self.server = "192.168.1.10\\SQLEXPRESS"
+        self.server = "tcp:127.0.0.1"  # Cambiado a tcp:127.0.0.1 para evitar resolución de nombre
+        self.port = "1433"             # Se agregó el puerto explícito
         self.user = "sa"
         self.password = "mps.1887"
         self.driver = "ODBC Driver 17 for SQL Server"
@@ -23,7 +25,7 @@ class DBConnection:
         try:
             self.connection_string = (
                 f"DRIVER={{{self.driver}}};"
-                f"SERVER={self.server};"
+                f"SERVER={self.server},{self.port};"  # Incluye el puerto explícitamente
                 f"DATABASE={base};"
                 f"UID={self.user};"
                 f"PWD={self.password};"
@@ -31,8 +33,18 @@ class DBConnection:
             self.connection = pyodbc.connect(self.connection_string)
             logger.info(f"Conexión a la base de datos '{base}' establecida.")
         except pyodbc.Error as e:
-            logger.error(f"Error al conectar a la base de datos '{base}': {e}")
-            raise RuntimeError(f"Error al conectar a la base de datos '{base}': {e}")
+            logger.critical(f"Error al conectar a la base de datos '{base}': {e}")
+            self.mostrar_error_conexion(e)
+
+    def mostrar_error_conexion(self, error):
+        """
+        Muestra un mensaje de error al usuario y abre la pantalla de configuración.
+        """
+        from PyQt6.QtWidgets import QMessageBox
+        QMessageBox.critical(None, "Error de Conexión", f"No se pudo conectar a la base de datos: {error}")
+        logger.error("Abriendo la pantalla de configuración del servidor.")
+        dialog = ConfigurarConexionDialog()
+        dialog.exec()
 
     def ejecutar_query(self, query: str, params: list = []):
         """

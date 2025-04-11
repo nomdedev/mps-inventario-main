@@ -1,134 +1,72 @@
-# MPS Inventario App
+# MPS Inventario
 
-Sistema de gestión de inventario y logística de obras, desarrollado en **Python + PyQt6**, con base de datos **SQL Server**. Inspirado en arquitectura SAP.
+Este proyecto es una aplicación para la gestión de inventarios con soporte para múltiples bases de datos y manejo seguro de credenciales.
 
----
+## Requisitos
 
-## 📦 Funcionalidades principales
+- Python 3.8 o superior
+- PyQt5
+- python-dotenv
+- pyodbc
+- cryptography
 
-- **Gestión de inventario**: Control de stock disponible, total y apartado.
-- **Módulo de obras**: Etapas definidas (medición, fabricación, colocación).
-- **Órdenes y pedidos**: Creación, seguimiento y aprobación de materiales.
-- **Sistema de usuarios**: Roles definidos (`admin`, `supervisor`, `operador`).
-- **Aprobaciones**: Validación de acciones sensibles.
-- **Auditoría**: Registro completo de cada operación.
-- **Dashboard**: KPIs, gráficos y entregas recientes.
-- **Exportación**: Reportes en Excel y PDF.
-- **Actualizador remoto**: Verificación y descarga de nuevas versiones.
+## Instalación
 
----
-
-## 🚀 Cómo correr el proyecto (modo desarrollo)
-
-1. **Clonar el repositorio**:
-   ```bash
-   git clone https://github.com/nomdedev/mps-inventario.git
-   cd mps-inventario
-   ```
-
-2. **Activar el entorno virtual**:
+1. Clonar el repositorio.
+2. Crear un entorno virtual:
    ```bash
    python -m venv venv
    source venv/bin/activate  # En Windows: venv\Scripts\activate
    ```
-
-3. **Instalar dependencias**:
+3. Instalar las dependencias:
    ```bash
    pip install -r requirements.txt
    ```
+4. Generar la clave de cifrado:
+   ```bash
+   python mps/config/generate_key.py
+   ```
+5. Configurar las credenciales iniciales en el archivo `.env`.
 
-4. **Ejecutar la app**:
+## Uso
+
+1. Ejecutar la aplicación:
    ```bash
    python main.py
    ```
+2. Configurar la base de datos desde la interfaz gráfica si es necesario.
 
----
+## Seguridad
 
-## 🏗 Cómo compilar en .exe
+- Las contraseñas se cifran utilizando `cryptography` y se almacenan en el archivo `.env`.
+- El archivo `.env` y la clave de cifrado (`encryption_key.key`) están excluidos del control de versiones mediante `.gitignore`.
 
-Usar **PyInstaller** para generar un ejecutable:
+## Seguridad adicional
+
+Para proteger el archivo `.env` y la clave de cifrado (`encryption_key.key`), asegúrate de restringir los permisos de archivo:
+
+### En Linux/MacOS
 ```bash
-pyinstaller --noconfirm --noconsole --icon=icon.ico --name "MPS Inventario" main.py
-```
-El ejecutable estará en la carpeta `dist/MPS Inventario/`.
-
----
-
-## 🔁 Actualizaciones
-
-La app incluye un módulo de actualización que:
-- Verifica la versión online.
-- Descarga automáticamente la nueva versión si está disponible.
-- Permite forzar actualizaciones solo para usuarios `admin`.
-
----
-
-## 🧪 Ramas y control de versiones
-
-| Rama         | Descripción                                      |
-|--------------|--------------------------------------------------|
-| **main**     | Desarrollo activo.                              |
-| **release**  | Versión estable (solo se mergea desde `main`).   |
-| **feature/** | Funcionalidades nuevas por módulo.               |
-
-**Importante**: Nunca trabajar directamente en `release`.
-
----
-
-## 🛠️ Agregar nuevas funcionalidades
-
-1. **Crear una nueva rama**:
-   ```bash
-   git checkout -b feature/nombre
-   ```
-
-2. **Implementar el módulo**:
-   - Ubicarlo en `controllers/`, `models/`, `ui/` o `services/`.
-
-3. **Evitar modificar directamente**:
-   - `main.py`
-   - `login`
-   - `session`
-   - `permisos`
-   - Conexión global a la base de datos.
-
-4. **Probar y validar**:
-   - Si funciona correctamente, hacer merge a `main`.
-
----
-
-## 🧠 Roles y permisos
-
-| Rol          | Permisos                                                                 |
-|--------------|--------------------------------------------------------------------------|
-| **admin**    | Acceso completo: gestión de usuarios, roles y actualizaciones.           |
-| **supervisor** | Aprobación de acciones, gestión de logística y órdenes.                |
-| **operador** | Uso básico: inventario y pedidos (sin acceso a usuarios ni roles).       |
-
----
-
-## 📁 Estructura del proyecto
-
-```plaintext
-mps-inventario/
-│
-├── main.py
-├── /mps/
-│   ├── ui/              # Interfaz PyQt6
-│   ├── models/          # Clases de datos
-│   ├── controllers/     # Lógica de negocio
-│   ├── services/        # Conexiones, sesiones, permisos
-│   ├── utils/           # Exportación, logs, herramientas
-│
-├── requirements.txt
-├── README.md
-└── exports/             # Archivos generados (Excel, PDF)
+chmod 600 .env encryption_key.key
 ```
 
----
+### En Windows
+```powershell
+icacls .env /inheritance:r /grant:r "%username%:F"
+icacls encryption_key.key /inheritance:r /grant:r "%username%:F"
+```
 
-## ✨ Autor
+Esto asegura que solo el usuario actual pueda leer o escribir estos archivos.
 
-**Martín Nomdedeu**  
-🔧 Desarrollador, líder de implementación técnica y visión SAP-style.
+## Registro
+
+Los eventos y errores se registran en el archivo `app.log` para facilitar la depuración.
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull request.
+
+## Licencia
+
+Este proyecto está bajo la licencia MIT.
 

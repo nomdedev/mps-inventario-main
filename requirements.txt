@@ -1,6 +1,8 @@
-pyodbc
+pyodbc==4.0.35
 qrcode[pil]
 pyzbar
 Pillow
 Flask
-PyQt6
+PyQt5==5.15.7
+python-dotenv==1.0.0
+cryptography==41.0.3

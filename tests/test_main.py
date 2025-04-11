@@ -11,7 +11,7 @@ class TestMain(unittest.TestCase):
     def test_analyze_dependencies_option(self, mock_print, mock_input):
         analyzer = DependencyAnalyzer()
         with patch.object(analyzer, "analyze", return_value=["modulo1", "modulo2"]):
-            from c:\Users\Oficina\Documents\Proyectos\mps-inventario\main import main
+            from mps.main import main
             main()
         mock_print.assert_any_call("Dependencias encontradas: ['modulo1', 'modulo2']")
 
@@ -20,7 +20,7 @@ class TestMain(unittest.TestCase):
     def test_connect_to_database(self, mock_print, mock_input):
         db_manager = DatabaseManager("localhost", "test_db", "user", "password")
         with patch.object(db_manager, "connect", return_value=None):
-            from c:\Users\Oficina\Documents\Proyectos\mps-inventario\main import main
+            from mps.main import main
             main()
         mock_print.assert_any_call("Conexión exitosa al servidor SQL.")
 
@@ -29,7 +29,7 @@ class TestMain(unittest.TestCase):
     def test_list_tables(self, mock_print, mock_input):
         db_manager = DatabaseManager("localhost", "test_db", "user", "password")
         with patch.object(db_manager, "list_tables", return_value=["tabla1", "tabla2"]):
-            from c:\Users\Oficina\Documents\Proyectos\mps-inventario\main import main
+            from mps.main import main
             main()
         mock_print.assert_any_call("Tablas en la base de datos:")
         mock_print.assert_any_call("- tabla1")
@@ -40,7 +40,7 @@ class TestMain(unittest.TestCase):
     def test_execute_query(self, mock_print, mock_input):
         db_manager = DatabaseManager("localhost", "test_db", "user", "password")
         with patch.object(db_manager, "execute_query", return_value=[("fila1",), ("fila2",)]):
-            from c:\Users\Oficina\Documents\Proyectos\mps-inventario\main import main
+            from mps.main import main
             main()
         mock_print.assert_any_call("Resultados de la consulta:")
         mock_print.assert_any_call(("fila1",))

@@ -1,6 +1,7 @@
 import sys
 import json
 import os
+import logging
 import pyodbc
 from PyQt6.QtWidgets import QApplication, QMessageBox, QDialog
 from PyQt6.QtCore import QFile, QTextStream
@@ -9,8 +10,23 @@ from mps.ui.main_window import MainWindow
 from mps.config.design_config import DESIGN_CONFIG
 from mps.ui.configurar_conexion_dialog import ConfigurarConexionDialog
 from mps.controllers.database_setup import DatabaseSetup
+from mps.config.logging_config import get_logger
 
 CONFIG_PATH = './config/databaseConfig.json'
+
+# Configurar logging
+logger = get_logger(__name__)
+
+def handle_exception(exc_type, exc_value, exc_traceback):
+    """Manejador global de excepciones."""
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    logger.error("Excepción no manejada", exc_info=(exc_type, exc_value, exc_traceback))
+    QMessageBox.critical(None, "Error crítico", f"Ocurrió un error inesperado: {exc_value}")
+
+# Configurar el manejador global de excepciones
+sys.excepthook = handle_exception
 
 def load_stylesheet(app):
     """
@@ -40,50 +56,17 @@ def load_config():
         return {"server": "", "port": 1433, "user": "", "password": ""}
 
 def main():
-    try:
-        print("Iniciando la aplicación...")  # Confirmación de inicio
-        app = QApplication(sys.argv)
-        load_stylesheet(app)
+    app = QApplication(sys.argv)
 
-        # Cargar configuración de conexión
-        config = load_config()
+    # Mostrar la ventana de inicio de sesión primero
+    login_window = LoginWindow()
+    login_window.show()
 
-        # Configurar la base de datos
-        db_setup = DatabaseSetup(config)
-        db_setup.setup()
+    # Si se necesita configurar el servidor, se puede invocar manualmente
+    # configurar_conexion_dialog = ConfigurarConexionDialog()
+    # configurar_conexion_dialog.exec()
 
-        # Crear instancia de LoginWindow
-        login_window = LoginWindow()
-        main_window = None
-
-        def on_login_successful(usuario_actual):
-            """
-            Maneja el evento de login exitoso.
-            Oculta la ventana de login y muestra la ventana principal.
-            """
-            nonlocal main_window
-            if usuario_actual is None:
-                print("Error: Usuario actual es nulo.")
-                QMessageBox.critical(None, "Error Crítico", "Usuario actual es nulo.")
-                return
-            print(f"Usuario autenticado: {usuario_actual}")
-            login_window.hide()
-            main_window = MainWindow(usuario_actual)
-            main_window.show()
-
-        # Conectar la señal de login exitoso
-        login_window.login_successful.connect(on_login_successful)
-
-        # Mostrar la ventana de login
-        login_window.show()
-
-        sys.exit(app.exec())
-    except Exception as e:
-        # Manejar excepciones globales y mostrar un mensaje de error
-        error_message = f"Se produjo un error inesperado: {e}"
-        print(error_message)
-        QMessageBox.critical(None, "Error Crítico", error_message)
-        raise
+    sys.exit(app.exec())
 
 if __name__ == "__main__":
     main()

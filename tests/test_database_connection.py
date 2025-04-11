@@ -1,5 +1,8 @@
 import unittest
 from mps.database_utils import connect_database
+import pytest
+from mps.config.db_config import CONNECTION_STRING
+import pyodbc
 
 class TestDatabaseConnection(unittest.TestCase):
     def setUp(self):
@@ -55,3 +58,10 @@ class TestDatabaseConnection(unittest.TestCase):
             print("La tabla 'usuarios' existe en la base de datos 'usuarios_db'.")
         except Exception as e:
             self.fail(f"Error al verificar la existencia de la tabla 'usuarios': {e}")
+
+def test_database_connection():
+    try:
+        connection = pyodbc.connect(CONNECTION_STRING, timeout=5)
+        connection.close()
+    except Exception as e:
+        pytest.fail(f"Conexión a la base de datos fallida: {str(e)}")

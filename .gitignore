@@ -32,3 +32,6 @@ config/databaseConfig.json
 *.env
 *.key
 *.json
+
+# Ignorar claves de cifrado
+encryption_key.key
