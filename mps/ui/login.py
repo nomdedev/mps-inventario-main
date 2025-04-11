@@ -50,7 +50,7 @@ class LoginWindow(QMainWindow):
 
         # Botón de inicio de sesión
         self.login_button = QPushButton("Iniciar sesión")
-        self.login_button.setFixedWidth(200)
+        self.login_button.setFixedWidth(200)  # Eliminar setStyleSheet individual
         self.login_button.clicked.connect(self.iniciar_sesion)
 
         # Agregar widgets al layout
@@ -80,5 +80,9 @@ class LoginWindow(QMainWindow):
                 self.login_successful.emit({"id": usuario_actual[0], "username": usuario_actual[1], "role": usuario_actual[2]})
             else:
                 QMessageBox.warning(self, "Error de Login", "Usuario o contraseña incorrectos.")
+        except AttributeError as e:
+            QMessageBox.critical(self, "Error", "Error en la configuración del logger. Verifique su implementación.")
+            print(f"Error de logger: {e}")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error al verificar las credenciales: {e}")
+            print(f"Error inesperado: {e}")

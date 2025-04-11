@@ -2,56 +2,40 @@ import logging
 import os
 from datetime import datetime
 
-# Clase para manejar el registro de logs en la aplicación.
-# Incluirá métodos para registrar información, advertencias y errores.
+def configurar_logger():
+    """
+    Configura el logger para la aplicación.
+    Crea la carpeta 'logs/' si no existe y asegura que el archivo 'logger.log' sea accesible.
+    """
+    try:
+        # Crear carpeta 'logs/' si no existe
+        logs_folder = "logs"
+        if not os.path.exists(logs_folder):
+            os.makedirs(logs_folder)
 
-class Logger:
-    LOG_DIR = "logs"
+        # Configurar archivo de log
+        log_file = os.path.join(logs_folder, "logger.log")
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[
+                logging.FileHandler(log_file, mode="a", encoding="utf-8"),
+                logging.StreamHandler()
+            ]
+        )
+        logging.info("Logger configurado correctamente.")
+    except Exception as e:
+        print(f"Error al configurar el logger: {e}")
+        import traceback
+        traceback.print_exc()
 
-    @staticmethod
-    def _get_logger():
-        """
-        Configura y devuelve un logger con un archivo de log diario.
-        """
-        if not os.path.exists(Logger.LOG_DIR):
-            os.makedirs(Logger.LOG_DIR)
+# Llamar a la configuración del logger al importar el módulo
+configurar_logger()
 
-        log_filename = os.path.join(Logger.LOG_DIR, f"{datetime.now().strftime('%Y-%m-%d')}.log")
-        logger = logging.getLogger("MPSLogger")
-
-        if not logger.hasHandlers():
-            logger.setLevel(logging.DEBUG)
-            file_handler = logging.FileHandler(log_filename)
-            formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-            file_handler.setFormatter(formatter)
-            logger.addHandler(file_handler)
-
-        return logger
-
-    @staticmethod
-    def log_info(mensaje):
-        """
-        Registra un mensaje informativo.
-        :param mensaje: Mensaje a registrar.
-        """
-        logger = Logger._get_logger()
-        logger.info(mensaje)
-
-    @staticmethod
-    def log_error(error):
-        """
-        Registra un mensaje de error.
-        :param error: Error a registrar.
-        """
-        logger = Logger._get_logger()
-        logger.error(error)
-
-    @staticmethod
-    def log_evento(tipo, mensaje):
-        """
-        Registra un evento importante.
-        :param tipo: Tipo de evento (ej. "LOGIN", "AUDITORÍA").
-        :param mensaje: Mensaje del evento.
-        """
-        logger = Logger._get_logger()
-        logger.info(f"[{tipo}] {mensaje}")
+def get_logger(name):
+    """
+    Retorna un logger con el nombre especificado.
+    :param name: Nombre del logger.
+    :return: Instancia del logger.
+    """
+    return logging.getLogger(name)

@@ -10,7 +10,7 @@ def load_stylesheet(app):
     Carga la hoja de estilo global desde el archivo style.qss.
     """
     try:
-        file = QFile("mps/ui/style.qss")
+        file = QFile("mps/assets/styles/style.qss")
         if file.open(QFile.OpenModeFlag.ReadOnly | QFile.OpenModeFlag.Text):
             stream = QTextStream(file)
             stylesheet = stream.readAll()
@@ -39,7 +39,7 @@ def main():
             nonlocal main_window
             print(f"Usuario autenticado: {usuario_actual}")
             login_window.hide()
-            main_window = MainWindow()
+            main_window = MainWindow(usuario_actual)
             main_window.show()
 
         # Conectar la señal de login exitoso
